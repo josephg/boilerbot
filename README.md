@@ -1,5 +1,2 @@
-Boilerplate
-===========
-
-This is a computer simulator using steam power.
+This is a hack of boilerplate to drive a robot using pinoccio.
 
