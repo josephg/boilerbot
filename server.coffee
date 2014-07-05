@@ -13,7 +13,7 @@ app = express()
 app.use express.static("#{__dirname}/")
 
 index = fs.readFileSync 'client.html', 'utf8'
-app.get '/', (req, res) -> res.redirect '/world/boilerplate'
+app.get '/', (req, res) -> res.redirect '/world/bot'
 app.get '/world/:worldname', (req, res) ->
   res.send index
 
