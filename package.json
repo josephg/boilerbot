@@ -1,7 +1,7 @@
 {
   "author": "Joseph Gentle <josephg@gmail.com>",
-  "name": "boilerplate",
-  "description": "A multiplayer steam-based CPU simulator",
+  "name": "boilerbot",
+  "description": "A boilerplate hack to control robots",
   "version": "0.0.0",
   "repository": {
     "url": ""
@@ -9,6 +9,7 @@
   "main": "server.coffee",
   "dependencies": {
     "level":"*",
+    "pinoccio":"*",
     "express":"*",
     "ws":"*"
   },

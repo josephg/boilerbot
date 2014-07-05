@@ -7,6 +7,8 @@ path = require 'path'
 Simulator = require './simulator'
 fs = require 'fs'
 
+io = require './io'
+
 app = express()
 app.use express.static("#{__dirname}/")
 
@@ -16,7 +18,7 @@ app.get '/world/:worldname', (req, res) ->
   res.send index
 
 server = http.createServer app
-port = 8011
+port = 8088
 
 #worldname = process.argv[2] ? 'boilerplate'
 #console.log "Opening file #{worldname}"
@@ -115,7 +117,51 @@ run = (error, value) ->
         msg = JSON.stringify {delta}
         for c in clients
           c.send msg
+
+
+    if worlds.bot
+      sim = worlds.bot.simulator
+      sim.set 40, 7, 'nothing'
+
+      sim.set 40, 20, 'nothing'
+      sim.set 40, 24, 'nothing'
+
+      pressure = sim.getPressure()
+      #console.log pressure['0,0']
+      io.setLed pressure['40,7']
+
+      left = ((pressure['40,20']|0) + 4) /8 * 256
+      right = ((pressure['40,24']|0) + 4) /8 * 256
+
+      io.drive(left, right)
+      
   , 200
+
+io.triggers.on 'buttons', (values) ->
+  return unless worlds.bot
+
+  sim = worlds.bot.simulator
+
+  for v, i in values
+    sim.set 5, 10+(i*2), (if values[i] then 'negative' else 'nothing')
+
+io.triggers.on 'pot', (value) ->
+  return unless worlds.bot
+
+  sim = worlds.bot.simulator
+
+  value -= 512
+
+  for i in [0...4]
+    amt = (i+1)*100
+    cell = if value < -amt
+      'negative'
+    else if value > amt
+      'positive'
+    else
+      null
+    sim.set 5, 20+i, cell
+
 
 server.listen port
 console.log "Listening on port #{port}"
